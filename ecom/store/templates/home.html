@@ -3,11 +3,11 @@
 {% block content %}
 
 <!-- Header-->
-<header class="bg-dark py-5">
+<header class="bg-secondary py-5">
     <div class="container px-4 px-lg-5 my-5">
         <div class="text-center text-white">
-            <h1 class="display-4 fw-bolder">Shop in style</h1>
-            <p class="lead fw-normal text-white-50 mb-0">With this shop hompeage template</p>
+            <h1 class="display-4 fw-bolder">Welcome to DaShirts</h1>
+            <p class="lead fw-normal text-white-50 mb-0">Shop for shirts</p>
         </div>
     </div>
 </header>
@@ -16,6 +16,7 @@
     <div class="container px-4 px-lg-5 mt-5">
         <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
 
+            <!--If Product is on Sale-->
             {% for product in products %}
                 {% if product.on_sale %}
                 
@@ -31,22 +32,21 @@
                                 <!-- Product name-->
                                 <h5 class="fw-bolder">{{ product.name }}</h5>
                                 <!-- Sale -->
-                                <div class="d-flex justify-content-center small text-warning mb-2">
-                                <div class="bi-star-fill"></div>
-                                &nbsp;&nbsp;Sale!&nbsp;&nbsp;
-                                <div class="bi-star-fill"></div>
+                                <div class="d-flex justify-content-center small text-warning mb-2 text-danger">
+                                <b>SALE!!!</b>
                                 </div>
                                 <!-- Product price-->
+                                <div class="text-danger">
                                 <strike>
-                                ${{ product.price}}
+                                ${{ product.price }}
                                 </strike>
-                                &nbsp;
-                                ${{ product.sale_price}}
+                                </div>
+                                ${{ product.sale_price }}
                             </div>
                         </div>
                         <!-- Product actions-->
                         <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                            <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">View options</a></div>
+                            <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="{% url 'product' product.id %}">View More</a></div>
                         </div>
                     </div>
                 </div>
@@ -67,7 +67,7 @@
                     </div>
                     <!-- Product actions-->
                     <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                        <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">View options</a></div>
+                        <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="{% url 'product' product.id %}">View More</a></div>
                     </div>
                 </div>
             </div>
