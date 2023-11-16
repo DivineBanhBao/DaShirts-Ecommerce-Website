@@ -31,10 +31,46 @@
             {% endif %}
             <br/>
             <a href="{% url 'home' %}" class="btn btn-secondary">Home</a>
+            <button class="btn btn-dark" type="button" value="{{ product.id }}" id="add-cart">
+              <a href="{% url 'add_to_cart' pk=product.id %}">Add To Cart</a>
+            </button>
           </div>
         </div>
       </div>
     </div>
 </div>
 <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+<script>
+  $(document).ready(function() {
+    // jQuery code to handle the "Add To Cart" button click
+    $("#add-cart").click(function() {
+        // Get the product ID from the button value attribute
+        var productId = $(this).val();
+
+        // Get the CSRF token from the cookie
+        var csrftoken = document.cookie.match(/csrftoken=([\w-]+)/)[1];
+
+        // Make an AJAX request to add the item to the cart
+        $.ajax({
+            type: "POST",
+            url: "{% url 'add_to_cart' pk=0 %}".replace('0', productId),
+            data: {
+                csrfmiddlewaretoken: csrftoken,
+            },
+            success: function(response) {
+                // Check the response message
+                if (response.message === 'Product added to cart successfully') {
+                    alert("Product added to cart!");
+                } else {
+                    alert("Error adding product to cart: " + response.message);
+                }
+            },
+            error: function(error) {
+                // Handle the error (e.g., show an error message)
+                alert("Error adding product to cart!");
+            }
+        });
+    });
+});
+  </script>
 {% endblock %}
