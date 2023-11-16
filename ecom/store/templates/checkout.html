@@ -1,11 +1,10 @@
-
 {% extends 'base.html' %}
 {% block content %}
 <div class="container px-3 my-5 clearfix">
   <!-- Shopping cart table -->
   <div class="card">
       <div class="card-header">
-          <h2>Shopping Cart</h2>
+          <h2>Checkout</h2>
       </div>
       <div class="card-body">
           <div class="table-responsive">
@@ -37,7 +36,7 @@
                         </div>
                       </td>
                       <td class="text-right font-weight-semibold align-middle p-4">{{ item.product.price }}</td>
-                      <td class="align-middle p-4"><input type="text" class="form-control text-center" value="{{ item.quantity }}"></td>
+                      <td class="align-middle p-4"><input type="text" class="form-control text-center" value="1"></td>
                       <td class="text-right font-weight-semibold align-middle p-4">{{ item.product.price }}</td>
                       <td class="text-center align-middle px-0"><a href="#" class="shop-tooltip close float-none text-danger" title="" data-original-title="Remove">X</a></td>
                     </tr>
@@ -58,13 +57,12 @@
             </div>
             <div class="d-flex">
               <div class="text-right mt-4 mr-5">
-                <label class="text-muted font-weight-normal m-0">Tax</label>
+                <label class="text-muted font-weight-normal m-0">Discount</label>
                 <div class="text-large"><strong>$20</strong></div>
               </div>
-              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
               <div class="text-right mt-4">
                 <label class="text-muted font-weight-normal m-0">Total price</label>
-                <div class="text-large"><strong>{{ total_price }}</strong></div>
+                <div class="text-large"><strong>$1164.65</strong></div>
               </div>
             </div>
           </div>
