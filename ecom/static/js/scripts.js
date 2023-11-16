@@ -5,3 +5,6 @@
 */
 // This file is intentionally blank
 // Use this file to add JavaScript to your project
+
+// Function to fetch the total number of items in the cart
+
