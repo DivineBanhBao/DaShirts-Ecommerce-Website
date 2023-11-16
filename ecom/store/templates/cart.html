@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<!-- Header-->
+<header class="bg-secondary py-5">
+    <div class="container px-4 px-lg-5 my-5">
+        <div class="text-center text-white">
+            <h1 class="display-4 fw-bolder">Shopping Cart</h1>
+            <p class="lead fw-normal text-white-50 mb-0">your items</p>
+        </div>
+    </div>
+</header>
+
+<div class="container">
+    <div class="row">
+        <center>
+            <h2>Your Cart</h2>
+            {% if cart_items %}
+              <ul>
+                {% for item in cart_items %}
+                  <li><img src="{{ item.product.image.url }}" class="img-fluid rounded-start" alt="...">{{ item.product.name }} - Quantity: {{ item.quantity }}</li>
+                {% endfor %}
+              </ul>
+            {% else %}
+              <p>Your cart is empty.</p>
+            {% endif %}
+
+            <div class="cart-number" id="cart-number">{{ total_items }}</div>
+        </center>
+    </div>
+</div>
+{% endblock %}
