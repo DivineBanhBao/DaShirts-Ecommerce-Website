@@ -92,12 +92,27 @@ def add_to_cart(request, pk):
     # Save the updated cart back to the session
     request.session['cart'] = cart
     print("Cart",cart)
-    return JsonResponse({
-        'message': 'Product added to cart successfully',
-        'cart': request.session.get('cart', {}),
-    })
-    #messages.success(request, "Product added to cart successfully")
-    #return redirect( 'product', product.id )
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return JsonResponse({
+            'message': 'Product added to cart successfully',
+            'cart': request.session.get('cart', {}),
+        }, content_type='application/json')
+    
+    messages.success(request, "Product added to cart successfully")
+    return redirect( 'product', product.id )
+
+def remove_from_cart(request, pk):
+    cart = request.session.get('cart', {})
+
+    # Check if the product is in the cart
+    if str(pk) in cart:
+        del cart[str(pk)]
+        request.session['cart'] = cart
+        messages.success(request, "Item removed from cart.")
+    else:
+        messages.error(request, "Item not found in cart.")
+
+    return redirect('view_cart')  # Redirect to the view cart page
 
 def view_cart(request):
     cart = request.session.get('cart', {})

@@ -31,10 +31,7 @@
             {% endif %}
             <br/>
             <a href="{% url 'home' %}" class="btn btn-secondary">Home</a>
-            <button class="btn btn-dark" type="button"  data-product-id="{{ product.id }}" id="add-cart">
-              <a href="{% url 'add_to_cart' pk=product.id %}">Add To Cart</a>
-            </button>
-            <button id="add-cart" data-product-id="{{ product.id }}">Add to Cart</button>
+            <a href="{% url 'add_to_cart' pk=product.id %}" class="btn btn-secondary">Add To Cart</a>
           </div>
         </div>
       </div>
