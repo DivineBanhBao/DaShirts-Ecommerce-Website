@@ -31,46 +31,52 @@
             {% endif %}
             <br/>
             <a href="{% url 'home' %}" class="btn btn-secondary">Home</a>
-            <button class="btn btn-dark" type="button" value="{{ product.id }}" id="add-cart">
+            <button class="btn btn-dark" type="button"  data-product-id="{{ product.id }}" id="add-cart">
               <a href="{% url 'add_to_cart' pk=product.id %}">Add To Cart</a>
             </button>
+            <button id="add-cart" data-product-id="{{ product.id }}">Add to Cart</button>
           </div>
         </div>
       </div>
     </div>
 </div>
 <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 <script>
+  var csrftoken = "{{ csrf_token }}";
+
   $(document).ready(function() {
-    // jQuery code to handle the "Add To Cart" button click
-    $("#add-cart").click(function() {
-        // Get the product ID from the button value attribute
-        var productId = $(this).val();
-
-        // Get the CSRF token from the cookie
-        var csrftoken = document.cookie.match(/csrftoken=([\w-]+)/)[1];
-
-        // Make an AJAX request to add the item to the cart
-        $.ajax({
-            type: "POST",
-            url: "{% url 'add_to_cart' pk=0 %}".replace('0', productId),
-            data: {
-                csrfmiddlewaretoken: csrftoken,
-            },
-            success: function(response) {
-                // Check the response message
-                if (response.message === 'Product added to cart successfully') {
-                    alert("Product added to cart!");
-                } else {
-                    alert("Error adding product to cart: " + response.message);
-                }
-            },
-            error: function(error) {
-                // Handle the error (e.g., show an error message)
-                alert("Error adding product to cart!");
-            }
-        });
-    });
-});
-  </script>
+      $("#add-cart").click(function(event) {
+          event.preventDefault(); // Prevent the default behavior of the button click
+  
+          var productId = $(this).data("product-id");
+          console.log("Product ID:", productId);
+  
+          if (typeof csrftoken === 'undefined') {
+              console.error("CSRF token is undefined. Check the order of script execution or token presence in the template.");
+              return;
+          }
+  
+          $.ajax({
+              type: "GET",
+              url: "{% url 'add_to_cart' pk=0 %}".replace('0', productId),
+              data: {
+                  csrfmiddlewaretoken: csrftoken,
+              },
+              success: function(response) {
+                  if (response.message === 'Product added to cart successfully') {
+                      alert("Product added to cart!");
+  
+                  } else {
+                      alert("Error adding product to cart: " + response.message);
+                  }
+              },
+              error: function(error) {
+                  console.error('Error:', error);
+                  alert("Error adding product to cart. Please try again later.");
+              }
+          });
+      });
+  });
+</script>
 {% endblock %}

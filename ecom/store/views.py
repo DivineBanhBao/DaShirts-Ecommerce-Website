@@ -2,8 +2,9 @@ from django.shortcuts import render, redirect, get_object_or_404
 from .models import *
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-from .forms import SignUpForm
+from .forms import *
 from django.http import JsonResponse
+from django.contrib.auth.models import User
 
 def category(request,cate):
     #replace Hypens with Spaces
@@ -55,11 +56,21 @@ def register_user(request):
     if request.method == "POST":
         form = SignUpForm(request.POST)
         if form.is_valid():
-            form.save()
-            username = form.cleaned_data['username']
-            password = form.cleaned_data['password1']
+            #form.save()
+            user = User.objects.create_user(
+                username = form.cleaned_data['username'],
+                password = form.cleaned_data['password1']  
+            )
+            customer = Customer.objects.create(
+                user=user,
+                phone=form.cleaned_data['phone'],
+                address=form.cleaned_data['address'],
+                first_name=form.cleaned_data['first_name'],
+                last_name=form.cleaned_data['last_name'],
+                email=form.cleaned_data['email'],
+                password = form.cleaned_data['password1']  
+            )
             # log in user
-            user = authenticate(username=username, password=password)
             login(request, user)
             messages.success(request, ("You Have Successfully Created An Account."))
             return redirect('home')
@@ -71,54 +82,86 @@ def register_user(request):
     
 def add_to_cart(request, pk):
     product = get_object_or_404(Product, id=pk)
+    # Get the current cart from the session
+    cart = request.session.get('cart', {})
 
-    # Check for the 'X-Requested-With' header to identify AJAX requests
-    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-        # For AJAX requests, update the cart and return a JSON response
-        cart = request.session.get('cart', [])
-        cart.append({'product_id': product.id, 'quantity': 1})
-        request.session['cart'] = cart
-
-        return JsonResponse({'message': 'Product added to cart successfully'})
-    else:
-        # For regular requests, use the simplified logic
-        if 'cart' not in request.session:
-            request.session['cart'] = []
-
-        cart = request.session['cart']
-        cart.append({'product_id': product.id, 'quantity': 1})
-        request.session['cart'] = cart
-
-        messages.success(request, "Product added to cart.")
-        return redirect('home')
+    print("Cart",cart)
+    # Increment the quantity for the product in the cart
+    cart[str(product.id)] = cart.get(str(product.id), 0) + 1
+    print("Product count",cart.get(str(product.id), 0))
+    # Save the updated cart back to the session
+    request.session['cart'] = cart
+    print("Cart",cart)
+    return JsonResponse({
+        'message': 'Product added to cart successfully',
+        'cart': request.session.get('cart', {}),
+    })
+    #messages.success(request, "Product added to cart successfully")
+    #return redirect( 'product', product.id )
 
 def view_cart(request):
-     # Retrieve cart information from the session
-    cart = request.session.get('cart', [])
-
-    # Retrieve product details for each item in the cart
+    cart = request.session.get('cart', {})
     cart_items = []
     total_price = 0
 
-    for item in cart:
-        product_id = item['product_id']
-        quantity = item['quantity']
+    for product_id, quantity in cart.items():
+        product = get_object_or_404(Product, id=product_id)
+        subtotal = product.price * quantity
+        total_price += subtotal
 
-        try:
-            product = Product.objects.get(id=product_id)
-            total_price += product.price * quantity
-            cart_items.append({'product': product, 'quantity': quantity})
-        except Product.DoesNotExist:
-            # Handle the case where the product does not exist
-            messages.warning(request, f"Product with ID {product_id} does not exist.")
+        cart_items.append({
+            'product': product,
+            'quantity': quantity,
+            'subtotal': subtotal,
+        })
+
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        return JsonResponse({
+            'cart_items': cart_items,
+            'total_price': total_price,
+        })
 
     return render(request, 'cart.html', {'cart_items': cart_items, 'total_price': total_price})
 
-def get_cart_number(request):
+def checkout(request):
     # Retrieve cart information from the session
     cart = request.session.get('cart', [])
 
-    # Calculate the total number of items in the cart
-    total_items = sum(item['quantity'] for item in cart)
+    # Handle the checkout form submission
+    if request.method == 'POST':
+        form = CheckoutForm(request.POST)
+        if form.is_valid():
+            # Process the form data (save to database, etc.)
+            #form_data = form.cleaned_data
+            order = form.save()
+            # ... (handle the form data as needed)
+            return redirect('payment_confirmation')  # Redirect to the next step in the checkout process
+    else:
+        form = CheckoutForm()
 
-    return JsonResponse({'total_items': total_items})
+    # Retrieve product details based on cart items
+    cart_items = []
+    total_price = 0
+
+    for product_id, quantity in cart.items():
+        product = get_object_or_404(Product, id=product_id)
+        subtotal = product.price * quantity
+        total_price += subtotal
+
+        cart_items.append({
+            'product': product,
+            'quantity': quantity,
+            'subtotal': subtotal,
+		    'checkout_form': form,
+        })
+    return render(request, 'checkout.html', {'cart_items': cart_items, 'total_price': total_price})
+
+def payment_confirmation(request):
+    # Perform any additional processing related to payment confirmation
+    # ...
+    return render(request, 'payment_confirmation.html')
+
+def cart_count(request):
+    cart_data = request.session.get('cart', {})
+    total_quantity = sum(cart_data.values())
+    return JsonResponse({'cart_count': total_quantity})
