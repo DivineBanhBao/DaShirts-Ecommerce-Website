@@ -27,20 +27,16 @@
                     <tr>
                       <td class="p-4">
                         <div class="media align-items-center">
-                          <img src="{{ item.product.image.url }}" class="d-block ui-w-40 ui-bordered mr-4" alt="">
+                          <img src="{{ item.product.image.url }}" class="d-block ui-w-40 ui-bordered mr-4" alt="" width="100" height="125">
                           <div class="media-body">
                             <a href="#" class="d-block text-dark">{{ item.product.name }}</a>
-                            <small>
-                              <span class="text-muted">Size: </span> EU 37 &nbsp;
-                              <span class="text-muted">Ships from: </span> China
-                            </small>
                           </div>
                         </div>
                       </td>
                       <td class="text-right font-weight-semibold align-middle p-4">{{ item.product.price }}</td>
                       <td class="text-right font-weight-semibold align-middle p-4">{{ item.quantity }}</td>
                       <td class="text-right font-weight-semibold align-middle p-4">{{ item.subtotal }}</td>
-                      <td class="text-center align-middle px-0"><a href="#" class="shop-tooltip close float-none text-danger" title="" data-original-title="Remove"><b>X</b></a></td>
+                      <td class="text-center align-middle px-0"><a href="{% url 'remove_from_cart' pk=item.product.id %}" class="btn btn-danger btn-sm"><i class="bi bi-x"></i></a></td>
                     </tr>
                     <!-- Set columns width -->
                     {% endfor %}
@@ -78,4 +74,28 @@
         </div>
     </div>
 </div>
+<script>
+  $(document).ready(function() {
+      $(".remove-cart-item").click(function() {
+          var productId = $(this).data('product-id');
+          var csrftoken = document.cookie.match(/csrftoken=([\w-]+)/)[1];
+  
+          $.ajax({
+              type: "POST",
+              url: "{% url 'remove_from_cart' pk=0 %}".replace('0', productId),
+              data: {
+                  csrfmiddlewaretoken: csrftoken,
+              },
+              success: function(response) {
+                  alert(response.message);
+                  // Optionally, you can update the cart display on the page
+                  // based on the response from the server.
+              },
+              error: function(error) {
+                  alert("Error removing item from cart.");
+              }
+          });
+      });
+  });
+  </script>
 {% endblock %}

@@ -10,6 +10,7 @@ urlpatterns = [
     path('product/<int:pk>', views.product, name='product'), #go to product page based on product (primary key) number
     path('category/<str:cate>',views.category,name='category'),
     path('add-to-cart/<int:pk>/', views.add_to_cart, name='add_to_cart'),
+    path('remove_from_cart/<int:pk>/', views.remove_from_cart, name='remove_from_cart'),
     path('view-cart/', views.view_cart, name='view_cart'),
     path('cart_count/', views.cart_count, name='cart_count'),
     path('checkout/', views.checkout, name='checkout'),
