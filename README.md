@@ -6,7 +6,7 @@ Running Project:
 3. myenv\Script\activate //activate virtual enviorment
 4. python -m pip install -r requirements.txt //install requirements 
 5. cd ecom // go into ecom directory
-6. pythom manage.py migrate 
+6. pythom manage.py migrate //get changes to website database
 7. python manage.py runserver //run website
 8. follow link in console to website or copy this into search bar http://127.0.0.1:8000/
 9. deactive //decactive the virtual enviorment (Only do this when you are finished with with the website)
