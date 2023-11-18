@@ -16,7 +16,7 @@ Running Project:
 8. follow link in console to website or copy this into search bar http://127.0.0.1:8000/
 9. deactive //decactive the virtual enviorment (Only do this when you are finished with with the website)
 
-Images of Project: 
+Some images of the Project: 
 
 ![image](https://github.com/DivineBanhBao/CS4393-Group-13-Ecom-Website-/assets/99203436/b0d7ded9-bae9-4318-8128-b7c18f758c8e)
 ![image](https://github.com/DivineBanhBao/CS4393-Group-13-Ecom-Website-/assets/99203436/f5bd329e-923d-4ad5-ba8e-db92a59fb208)
