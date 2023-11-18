@@ -1,5 +1,10 @@
 # CS4393-Group-13-Ecom-Website-
 
+Prerequisite
+  Python 3.11.6:
+  https://www.python.org/downloads/release/python-3116/
+
+
 Running Project:
 1. pip install virtualenv //install virtual enviorment
 2. python -m virtualenv myenv //create folder myenv for virtual machine
