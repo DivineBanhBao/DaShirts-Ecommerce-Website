@@ -5,6 +5,8 @@ from django.contrib import messages
 from .forms import *
 from django.http import JsonResponse
 from django.contrib.auth.models import User
+from django.db import transaction
+from django.utils import timezone
 
 def category(request,cate):
     #replace Hypens with Spaces
@@ -87,8 +89,9 @@ def add_to_cart(request, pk):
 
     print("Cart",cart)
     # Increment the quantity for the product in the cart
-    cart[str(product.id)] = cart.get(str(product.id), 0) + 1
-    print("Product count",cart.get(str(product.id), 0))
+    product.id = str(product.id)
+    cart[product.id] = cart.get(product.id, 0) + 1
+    print("Product count",cart.get(product.id, 0))
     # Save the updated cart back to the session
     request.session['cart'] = cart
     print("Cart",cart)
@@ -113,6 +116,11 @@ def remove_from_cart(request, pk):
         messages.error(request, "Item not found in cart.")
 
     return redirect('view_cart')  # Redirect to the view cart page
+
+def cart_count(request):
+    cart_data = request.session.get('cart', {})
+    total_quantity = sum(cart_data.values())
+    return JsonResponse({'cart_count': total_quantity})
 
 def view_cart(request):
     cart = request.session.get('cart', {})
@@ -140,17 +148,64 @@ def view_cart(request):
 
 def checkout(request):
     # Retrieve cart information from the session
-    cart = request.session.get('cart', [])
+    cart = request.session.get('cart', {})
+
+    # Check if the user has a Customer instance
+    if hasattr(request.user, 'customer') and request.user.customer:
+        customer = request.user.customer
+    else:
+        # Handle the case where the user doesn't have a Customer instance
+        # You might want to redirect to a page where the user can create a profile.
+        messages.error(request, "Please create an account.")
+        return redirect('register')  # Adjust the URL as needed
 
     # Handle the checkout form submission
     if request.method == 'POST':
         form = CheckoutForm(request.POST)
+        print(form.errors)
         if form.is_valid():
             # Process the form data (save to database, etc.)
-            #form_data = form.cleaned_data
-            order = form.save()
-            # ... (handle the form data as needed)
-            return redirect('payment_confirmation')  # Redirect to the next step in the checkout process
+            try:
+                with transaction.atomic():
+                    # 1. Create an Order instance
+                    order = Order.objects.create(
+                        customer=customer,
+                        total_amount=0,  # Update later
+                        order_date=timezone.now(),
+                        is_completed=False,
+                        full_name=form.cleaned_data['full_name'],
+                        address_line1=form.cleaned_data['address_line1'],
+                        address_line2=form.cleaned_data['address_line2'],
+                        city=form.cleaned_data['city'],
+                        state=form.cleaned_data['state'],
+                        postal_code=form.cleaned_data['postal_code'],
+                        country=form.cleaned_data['country'],
+                    )
+                    # 2. Create OrderItem instances
+                    for product_id, quantity in cart.items():
+                        product = get_object_or_404(Product, id=int(product_id))
+                        item_price = product.price * quantity
+
+                        order_item = OrderItem.objects.create(
+                            order=order,
+                            product=product,
+                            quantity=quantity,
+                            item_price=item_price,
+                        )
+
+                    # 3. Update the order's total_amount
+                    order.total_amount = sum(item * Product.objects.get(id=int(product_id)).price for product_id, item in cart.items())
+                    order.save()
+
+                    # Clear the cart after the order is created
+                    request.session['cart'] = {}
+
+                return redirect('payment_confirmation', order_id=order.id)  # Redirect to the next step in the checkout process
+
+            except Exception as e:
+                # Handle any exceptions (e.g., database errors)
+                print(f"Error creating order: {e}")
+                messages.error(request, "Error creating order. Please try again.")
     else:
         form = CheckoutForm()
 
@@ -159,7 +214,7 @@ def checkout(request):
     total_price = 0
 
     for product_id, quantity in cart.items():
-        product = get_object_or_404(Product, id=product_id)
+        product = get_object_or_404(Product, id=int(product_id))
         subtotal = product.price * quantity
         total_price += subtotal
 
@@ -167,16 +222,14 @@ def checkout(request):
             'product': product,
             'quantity': quantity,
             'subtotal': subtotal,
-		    'checkout_form': form,
+            'checkout_form': form,
         })
-    return render(request, 'checkout.html', {'cart_items': cart_items, 'total_price': total_price})
 
-def payment_confirmation(request):
-    # Perform any additional processing related to payment confirmation
-    # ...
-    return render(request, 'payment_confirmation.html')
+    return render(request, 'checkout.html', {'cart_items': cart_items, 'total_price': total_price, 'checkout_form': form})
 
-def cart_count(request):
-    cart_data = request.session.get('cart', {})
-    total_quantity = sum(cart_data.values())
-    return JsonResponse({'cart_count': total_quantity})
+def payment_confirmation(request, order_id):
+    order = Order.objects.get(id=order_id)
+    return render(request, 'payment_confirmation.html', {'order':order})
+
+def view_orders(request):
+    return render(request, 'orders.html', {})

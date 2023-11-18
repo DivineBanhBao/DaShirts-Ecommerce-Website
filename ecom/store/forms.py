@@ -38,10 +38,9 @@ class CheckoutForm(forms.Form):
 		model = Order
 		fields = '__all__'
 
-	first_name = forms.CharField(label='First Name', max_length=100, widget=forms.TextInput(attrs={'class':'form-control'}))
-	last_name = forms.CharField(label='Last Name', max_length=100, widget=forms.TextInput(attrs={'class':'form-control'}))
-	address_line1 = forms.CharField(label='Address Line 1', max_length=255, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Ex:123 Main St'}))
-	address_line2 = forms.CharField(label='Address Line 2', max_length=255, required=False, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Apartment or suite'}))
+	full_name = forms.CharField(label='Full Name(First and Last name)', max_length=100, widget=forms.TextInput(attrs={'class':'form-control'}))
+	address_line1 = forms.CharField(label='Address Line 1', max_length=255, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Street Address'}))
+	address_line2 = forms.CharField(label='Address Line 2', max_length=255, required=False, widget=forms.TextInput(attrs={'class':'form-control', 'placeholder':'Apt, suite, unit, building, floor, etc.'}))
 	city = forms.CharField(label='City', max_length=100, widget=forms.TextInput(attrs={'class':'form-control'}))
 	state = forms.CharField(label='State', max_length=100, widget=forms.TextInput(attrs={'class':'form-control'}))
 	postal_code = forms.CharField(label='Postal Code', max_length=20, widget=forms.TextInput(attrs={'class':'form-control'}))
@@ -57,5 +56,9 @@ class CheckoutForm(forms.Form):
 	# Payment-related fields
 	name_on_card = forms.CharField(label='Name on Card', max_length=100, widget=forms.TextInput(attrs={'class':'form-control'}))
 	card_number = forms.CharField(label='Card Number', max_length=16, widget=forms.TextInput(attrs={'class':'form-control'}))
-	expiration_date = forms.DateField(label='Expiration Date', widget=forms.DateInput(attrs={'class':'form-control','placeholder': 'MM/YY'}))
-	cvv = forms.CharField(label='CVV', max_length=4, widget=forms.TextInput(attrs={'class':'form-control'}))
+	expiration_date = forms.DateField(
+		label='Expiration Date',
+		widget=forms.DateInput(attrs={'class': 'form-control', 'placeholder': 'MM/YY'}),
+		input_formats=['%m/%y']  # Add this line to specify the date format
+	)
+	cvv = forms.CharField(label='CVV', max_length=3, widget=forms.TextInput(attrs={'class':'form-control'}))

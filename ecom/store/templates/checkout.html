@@ -17,8 +17,8 @@
   <h3>Billing Address</h3>
   <form method="post" action="{% url 'checkout' %}">
     {% csrf_token %}
-    {{ checkout_form.first_name.label_tag }} {{ checkout_form.first_name }}
-    {{ checkout_form.last_name.label_tag }} {{ checkout_form.last_name }}
+    {{ checkout_form.errors }}
+    {{ checkout_form.full_name.label_tag }} {{ checkout_form.full_name }}
     {{ checkout_form.address_line1.label_tag }} {{ checkout_form.address_line1 }}
     {{ checkout_form.address_line2.label_tag }} {{ checkout_form.address_line2 }}
     {{ checkout_form.city.label_tag }} {{ checkout_form.city }}

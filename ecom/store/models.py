@@ -1,7 +1,7 @@
 from django.db import models
-import datetime
 from django.contrib.auth.models import User
 from django.utils import timezone
+
 #Categories of Products
 class Category(models.Model):
     name = models.CharField(max_length=50)
@@ -55,6 +55,13 @@ class Order(models.Model):
     order_date = models.DateTimeField(default=timezone.now)
     total_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0)
     is_completed = models.BooleanField(default=False)
+    full_name = models.CharField(max_length=50, null=True)
+    address_line1 = models.CharField(max_length=50, blank=True, null=True)
+    address_line2 = models.CharField(max_length=50, blank=True, null=True)
+    city = models.CharField(max_length=50, null=True)
+    state = models.CharField(max_length=50, null=True)
+    postal_code = models.CharField(max_length=5, null=True)
+    country = models.CharField(max_length=15, null=True)
 
     def __str__(self):
         return f"Order {self.id} by {self.customer.user.username}"
