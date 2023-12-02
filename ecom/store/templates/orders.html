@@ -13,14 +13,24 @@
 
 <div class="container">
     <div class="row">
-        <center>
-            <div class="col-8">
-            <br/><br/>
-            <p align="justify">
-                orders
-            </p>
-            </div>
-        </center>
+        <h2>All Orders</h2>
+
+        {% if orders %}
+          <ul>
+            {% for order in orders %}
+              <li>
+                <a href="{% url 'view_order_details' order.id %}">View Order</a>
+                Order ID: {{ order.id }}<br>
+                Customer: {{ order.customer.user.username }}<br>
+                Total Amount: ${{ order.total_amount }}<br>
+                Order Date: {{ order.order_date }}<br>
+                <!-- Add other order details as needed -->
+              </li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <p>No orders available.</p>
+        {% endif %}
     </div>
 </div>
 {% endblock %}
