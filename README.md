@@ -8,7 +8,7 @@ Prerequisite
 Running Project:
 1. pip install virtualenv //install virtual enviorment
 2. python -m virtualenv myenv //create folder myenv for virtual machine
-3. myenv\Script\activate //activate virtual enviorment
+3. myenv\Scripts\activate //activate virtual enviorment
 4. python -m pip install -r requirements.txt //install requirements 
 5. cd ecom // go into ecom directory
 6. python manage.py migrate //get changes to website database
