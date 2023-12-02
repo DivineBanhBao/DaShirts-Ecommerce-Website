@@ -232,4 +232,9 @@ def payment_confirmation(request, order_id):
     return render(request, 'payment_confirmation.html', {'order':order})
 
 def view_orders(request):
-    return render(request, 'orders.html', {})
+    orders = Order.objects.all()
+    return render(request, 'orders.html', {'orders': orders})
+
+def view_order_details(request, order_id):
+    order = get_object_or_404(Order, id=order_id)
+    return render(request, 'order_details.html', {'order': order})
