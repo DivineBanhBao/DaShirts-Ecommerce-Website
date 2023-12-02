@@ -1,7 +1,7 @@
 <!-- Navigation-->
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <div class="container px-4 px-lg-5">
-        <a class="navbar-brand" href="{% url 'home' %}">DaShirts</a>
+        <a class="navbar-brand" href="{% url 'home' %}"><b>DaShirts</b></a>
         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
         <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
@@ -21,13 +21,15 @@
                 </li>
                 <li class="nav-item"><a class="nav-link" href="{% url 'about' %}">About</a></li>
             </ul>
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+            &nbsp;&nbsp;&nbsp;
+            <div class="container">
+                <form method="GET" action="{% url 'search' %}">
+                    <input type="text" name="q" placeholder="Search">
+                    <button type="submit">Search</button>
+                </form>
+            </div>
+            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
             <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
                 {% if user.is_authenticated %}
                     <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Logout</a></li>
@@ -37,15 +39,18 @@
                 {% endif %}                
                 <li class="nav-item"><a class="nav-link" href="{% url 'view_orders' %}">Orders</a></li>                
             </ul>
-            <form class="d-flex">
-                <a href="{% url 'view_cart' %}" class="btn btn-outline-dark">
-                    <i class="bi-cart-fill me-1"></i>
-                    Cart
-                    <span class="badge bg-dark text-white ms-1 rounded-pill">
-                        <span id="cart-quantity">0</span>
-                    </span>
-                </a>
-            </form>
+            <div class="container">
+                <form class="d-flex">
+                    <a href="{% url 'view_cart' %}" class="btn btn-outline-dark">
+                        <i class="bi-cart-fill me-1"></i>
+                        Cart
+                        <span class="badge bg-dark text-white ms-1 rounded-pill">
+                            <span id="cart-quantity">0</span>
+                        </span>
+                    </a>
+                </form>
+            </div>
+ 
         </div>
     </div>
 </nav>

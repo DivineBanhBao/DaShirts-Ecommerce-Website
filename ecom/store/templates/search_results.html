@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block content %}<!-- templates/search_results.html -->
+<title>Search Results</title>  
+<div class="container">
+    <div class="row">
+        <h1>Search Results</h1>
+        {% if query %}
+            <p>Results for '{{ query }}':</p>
+            <ul>
+                {% for product in results %}
+                    <li><a href="{% url 'product' pk=product.pk %}">{{ product.name }}</a></li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>No search query provided.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

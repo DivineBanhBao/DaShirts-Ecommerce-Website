@@ -156,8 +156,8 @@ def checkout(request):
     else:
         # Handle the case where the user doesn't have a Customer instance
         # You might want to redirect to a page where the user can create a profile.
-        messages.error(request, "Please create an account.")
-        return redirect('register')  # Adjust the URL as needed
+        messages.error(request, "Please Login to Checkout.")
+        return redirect('login') 
 
     # Handle the checkout form submission
     if request.method == 'POST':
@@ -232,9 +232,35 @@ def payment_confirmation(request, order_id):
     return render(request, 'payment_confirmation.html', {'order':order})
 
 def view_orders(request):
-    orders = Order.objects.all()
-    return render(request, 'orders.html', {'orders': orders})
+    # Check if the user has a Customer instance
+    if hasattr(request.user, 'customer') and request.user.customer:
+        customer = request.user.customer
+    else:
+        # Handle the case where the user doesn't have a Customer instance
+        # You might want to redirect to a page where the user can create a profile.
+        messages.error(request, "Please Login to View Orders.")
+        return redirect('login') 
+
+    # Continue with your logic for authenticated users
+    orders = Order.objects.filter(customer=customer).order_by('-order_date')
+    context = {'orders': orders}
+
+    return render(request, 'orders.html', context)
 
 def view_order_details(request, order_id):
     order = get_object_or_404(Order, id=order_id)
     return render(request, 'order_details.html', {'order': order})
+
+def search(request):
+    query = request.GET.get('q')
+
+    if query:
+        results = Product.objects.filter(name__icontains=query)
+
+        # Redirect directly to the product page if there's a single result
+        if results.count() == 1:
+            return redirect('product', pk=results.first().pk)
+    else:
+        results = None
+
+    return render(request, 'search_results.html', {'results': results, 'query': query})
