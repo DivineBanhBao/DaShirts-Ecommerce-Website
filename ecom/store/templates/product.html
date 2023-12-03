@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+<div class="container">
+  <br/>
+  <div class="card mb-3">
+      <div class="row g-0">
+        <div class="col-md-4">
+          <img src="{{ product.image.url }}" class="img-fluid rounded-start" alt="...">
+        </div>
+        <div class="col-md-8">
+          <div class="card-body">
+
+            <h5 class="card-title">{{ product.name }}</h5>
+            <p class="card-text">{{ product.description }}</p>
+            {% if product.on_sale %}
+            <div class="d-flex small text-warning mb-2 text-danger">
+              <b>SALE!!!</b>
+              </div>
+              <!-- Product price-->
+              <div class="text-danger">
+              <strike>
+              ${{ product.price }}
+              </strike>
+              </div>
+              ${{ product.sale_price }}
+
+            {% else %}
+              ${{ product.price }}
+            {% endif %}
+            <br/>
+            <a href="{% url 'home' %}" class="btn btn-secondary">Home</a>
+            <a href="{% url 'add_to_cart' pk=product.id %}" class="btn btn-secondary">Add To Cart</a>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+<br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+<script>
+  var csrftoken = "{{ csrf_token }}";
+
+  $(document).ready(function() {
+      $("#add-cart").click(function(event) {
+          event.preventDefault(); // Prevent the default behavior of the button click
+  
+          var productId = $(this).data("product-id");
+          console.log("Product ID:", productId);
+  
+          if (typeof csrftoken === 'undefined') {
+              console.error("CSRF token is undefined. Check the order of script execution or token presence in the template.");
+              return;
+          }
+  
+          $.ajax({
+              type: "GET",
+              url: "{% url 'add_to_cart' pk=0 %}".replace('0', productId),
+              data: {
+                  csrfmiddlewaretoken: csrftoken,
+              },
+              success: function(response) {
+                  if (response.message === 'Product added to cart successfully') {
+                      alert("Product added to cart!");
+  
+                  } else {
+                      alert("Error adding product to cart: " + response.message);
+                  }
+              },
+              error: function(error) {
+                  console.error('Error:', error);
+                  alert("Error adding product to cart. Please try again later.");
+              }
+          });
+      });
+  });
+</script>
+{% endblock %}

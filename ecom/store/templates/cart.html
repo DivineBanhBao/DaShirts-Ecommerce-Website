@@ -1,0 +1,101 @@
+
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container px-3 my-5 clearfix">
+  <!-- Shopping cart table -->
+  <div class="card">
+      <div class="card-header">
+          <h2>Shopping Cart</h2>
+      </div>
+      <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-bordered m-0">
+              <thead>
+                <tr>
+                  <!-- Set columns width -->
+                  <th class="text-center py-3 px-4" style="min-width: 400px;">Product Name &amp; Details</th>
+                  <th class="text-right py-3 px-4" style="width: 100px;">Price</th>
+                  <th class="text-center py-3 px-4" style="width: 120px;">Quantity</th>
+                  <th class="text-right py-3 px-4" style="width: 100px;">Subtotal</th>
+                  <th class="text-center align-middle py-3 px-0" style="width: 40px;"><a href="#" class="shop-tooltip float-none text-light" title="" data-original-title="Clear cart"><i class="ino ion-md-trash"></i></a></th>
+                </tr>
+              </thead>
+              <tbody>
+                {% if cart_items %}
+                    {% for item in cart_items %}
+                    <tr>
+                      <td class="p-4">
+                        <div class="media align-items-center">
+                          <img src="{{ item.product.image.url }}" class="d-block ui-w-40 ui-bordered mr-4" alt="" width="100" height="125">
+                          <div class="media-body">
+                            <a href="#" class="d-block text-dark">{{ item.product.name }}</a>
+                          </div>
+                        </div>
+                      </td>
+                      <td class="text-right font-weight-semibold align-middle p-4">{{ item.product.price }}</td>
+                      <td class="text-right font-weight-semibold align-middle p-4">{{ item.quantity }}</td>
+                      <td class="text-right font-weight-semibold align-middle p-4">{{ item.subtotal }}</td>
+                      <td class="text-center align-middle px-0"><a href="{% url 'remove_from_cart' pk=item.product.id %}" class="btn btn-danger btn-sm"><i class="bi bi-x"></i></a></td>
+                    </tr>
+                    <!-- Set columns width -->
+                    {% endfor %}
+                {% else %}
+                  <p>Your cart is empty.</p>
+                {% endif %}
+              </tbody>
+            </table>
+          </div>
+          <!-- / Shopping cart table -->
+      
+          <div class="d-flex flex-wrap justify-content-between align-items-center pb-4">
+            <div class="mt-4">
+              <label class="text-muted font-weight-normal">Promocode</label>
+              <input type="text" placeholder="ABC" class="form-control">
+            </div>
+            <div class="d-flex">
+              <div class="text-right mt-4 mr-5">
+                <label class="text-muted font-weight-normal m-0">Tax</label>
+                <div class="text-large"><strong>$20</strong></div>
+              </div>
+              &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              <div class="text-right mt-4">
+                <label class="text-muted font-weight-normal m-0">Total price</label>
+                <div class="text-large"><strong>{{ total_price }}</strong></div>
+              </div>
+            </div>
+          </div>
+      
+          <div class="float-right">
+            <a class="btn btn-outline-dark mt-auto btn-lg" href="{% url 'home' %}">Back to shopping</a>
+            <a class="btn btn-outline-dark mt-auto btn-lg" href="{% url 'checkout' %}">Checkout</a>
+          </div>
+      
+        </div>
+    </div>
+</div>
+<script>
+  $(document).ready(function() {
+      $(".remove-cart-item").click(function() {
+          var productId = $(this).data('product-id');
+          var csrftoken = document.cookie.match(/csrftoken=([\w-]+)/)[1];
+  
+          $.ajax({
+              type: "POST",
+              url: "{% url 'remove_from_cart' pk=0 %}".replace('0', productId),
+              data: {
+                  csrfmiddlewaretoken: csrftoken,
+              },
+              success: function(response) {
+                  alert(response.message);
+                  // Optionally, you can update the cart display on the page
+                  // based on the response from the server.
+              },
+              error: function(error) {
+                  alert("Error removing item from cart.");
+              }
+          });
+      });
+  });
+  </script>
+{% endblock %}

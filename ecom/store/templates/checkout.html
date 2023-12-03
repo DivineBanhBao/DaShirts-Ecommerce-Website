@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container">
+  <h2>Checkout</h2>
+  <hr>
+  <h3>Cart:</h3>
+  <ul>
+      {% for item in cart_items %}
+          <li>{{ item.product.name }} - Quantity: {{ item.quantity }}</li>
+      {% endfor %}
+  </ul>
+  <h5>Total Price: ${{ total_price }}</h5>
+  <hr>
+  <br/>
+  <!-- Checkout form -->
+  <h3>Billing Address</h3>
+  <form method="post" action="{% url 'checkout' %}">
+    {% csrf_token %}
+    {{ checkout_form.errors }}
+    {{ checkout_form.full_name.label_tag }} {{ checkout_form.full_name }}
+    {{ checkout_form.address_line1.label_tag }} {{ checkout_form.address_line1 }}
+    {{ checkout_form.address_line2.label_tag }} {{ checkout_form.address_line2 }}
+    {{ checkout_form.city.label_tag }} {{ checkout_form.city }}
+    {{ checkout_form.state.label_tag }} {{ checkout_form.state }}
+    {{ checkout_form.postal_code.label_tag }} {{ checkout_form.postal_code }}
+    {{ checkout_form.country.label_tag }} {{ checkout_form.country }}
+    <br>
+    <hr>
+    
+    <!-- Payment title -->
+    <h3>Payment Information</h3>
+    <br>
+    {{ checkout_form.payment_type.label_tag }} {{ checkout_form.payment_type }}
+    <br><br>
+    <!-- Payment-related fields -->
+    {{ checkout_form.name_on_card.label_tag }} {{ checkout_form.name_on_card }}
+    {{ checkout_form.card_number.label_tag }} {{ checkout_form.card_number }}
+    {{ checkout_form.expiration_date.label_tag }} {{ checkout_form.expiration_date }}
+    {{ checkout_form.cvv.label_tag }} {{ checkout_form.cvv }}
+    <br>
+    <hr>
+    <br>
+    <input class="btn btn-outline-dark mt-auto btn-lg" type="submit" value="Complete Purchase">
+  </form>
+  <br/>
+  <a class="btn btn-outline-dark mt-auto btn-lg" href="{% url 'view_cart' %}">Back to Cart</a>
+</div>
+<br/><br/><br/><br/>
+{% endblock %}

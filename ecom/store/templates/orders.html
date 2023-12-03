@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% block content %}
+
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    {% endfor %}
+{% endif %}
+
+<!-- Header-->
+<header class="bg-secondary py-5">
+    <div class="container px-4 px-lg-5 my-5">
+        <div class="text-center text-white">
+            <h1 class="display-4 fw-bolder">Orders</h1>
+            <p class="lead fw-normal text-white-50 mb-0">view orders</p>
+        </div>
+    </div>
+</header>
+
+<div class="container">
+    <div class="row">
+        <h2>All Orders</h2>
+
+        {% if orders %}
+          <ul>
+            {% for order in orders %}
+              <li>
+                <a href="{% url 'view_order_details' order.id %}">View Order</a>
+                Order ID: {{ order.id }}<br>
+                Customer: {{ order.customer.user.username }}<br>
+                Total Amount: ${{ order.total_amount }}<br>
+                Order Date: {{ order.order_date }}<br>
+                <!-- Add other order details as needed -->
+              </li>
+            {% endfor %}
+          </ul>
+        {% else %}
+          <p>No orders available.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
