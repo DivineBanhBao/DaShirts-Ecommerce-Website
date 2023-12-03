@@ -29,7 +29,20 @@ def home(request):
     return render(request, 'home.html', {'products':products})
 
 def help(request):
-    return render(request, 'help.html', {})
+    # Retrieve all questions from the model and reverse the order
+    questions = Help.objects.all().order_by('-id')
+
+    # Check if the form is submitted
+    if request.method == 'POST':
+        form = HelpForm(request.POST)
+        if form.is_valid():
+            form.save()
+            # Reinitialize the form with an empty CharField after saving
+            form = HelpForm()
+    else:
+        form = HelpForm()
+
+    return render(request, 'help.html', {'form': form, 'questions': questions[:5]})
 
 def login_user(request):
     if request.method == "POST":

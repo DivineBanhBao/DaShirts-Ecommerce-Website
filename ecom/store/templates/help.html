@@ -45,19 +45,26 @@
         <center>
             <div class="col-8">
                 <br/><br/>
-                <form method="POST" action="{% url 'login' %}">
+                <h1 align="left">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ask a Question</h1>
+                <form method="post" action="">
                     {% csrf_token %}
-                    <h1 align="left">Ask a Question</h1>
-                    <div class="mb-3">
-                    <input type="text" class="form-control" name="Ask a Question">
-                    <div>
-                    <br>
-                    <button type="submit" class="btn btn-secondary" >Submit</button>
-                    </div>
+                    {{ form.question_text }}
+                    <button type="submit" class="btn btn-secondary">Submit</button>
                 </form>
                 <br/><br/><br/><br/>
             </div>
         </center>
+    </div>
+    <div class="row">
+        <center>
+            <div align="left" style="padding-left:360px">
+            <h2>Recent Questions</h2>
+            {% for question in questions %}
+                <p>{{ question.question_text }}</p>
+            {% endfor %}
+            <div>
+
+    </center>
     </div>
     <div class="row">
         <center>

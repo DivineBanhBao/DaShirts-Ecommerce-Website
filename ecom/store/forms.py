@@ -62,3 +62,11 @@ class CheckoutForm(forms.Form):
 		input_formats=['%m/%y']  # Add this line to specify the date format
 	)
 	cvv = forms.CharField(label='CVV', max_length=3, widget=forms.TextInput(attrs={'class':'form-control'}))
+
+class HelpForm(forms.ModelForm):
+    class Meta:
+        model = Help
+        fields = ['question_text']
+        widgets = {
+            'question_text': forms.TextInput(attrs={'style': 'width: 500px;'}),
+        }
