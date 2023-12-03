@@ -233,6 +233,10 @@ def checkout(request):
         product = get_object_or_404(Product, id=int(product_id))
         subtotal = product.price * quantity
         total_price += subtotal
+        tax = (total_price * Decimal(str(0.0625)))
+        tax =  tax.quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
+        total_price = tax + total_price
+        total_price = total_price.quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
 
         cart_items.append({
             'product': product,
