@@ -138,7 +138,7 @@ def view_cart(request):
     cart = request.session.get('cart', {})
     cart_items = []
     total_price = 0
-
+    tax = 0
     for product_id, quantity in cart.items():
         product = get_object_or_404(Product, id=product_id)
         subtotal = product.price * quantity
@@ -228,7 +228,7 @@ def checkout(request):
     # Retrieve product details based on cart items
     cart_items = []
     total_price = 0
-
+    tax = 0
     for product_id, quantity in cart.items():
         product = get_object_or_404(Product, id=int(product_id))
         subtotal = product.price * quantity
