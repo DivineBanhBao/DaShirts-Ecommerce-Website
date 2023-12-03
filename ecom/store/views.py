@@ -9,8 +9,6 @@ from django.db import transaction
 from django.utils import timezone
 
 def category(request,cate):
-    #replace Hypens with Spaces
-    #cate = cate.replace('-', '')
     #Grab category from url
     try:
         #look up category
@@ -30,8 +28,8 @@ def home(request):
     products = Product.objects.all()
     return render(request, 'home.html', {'products':products})
 
-def about(request):
-    return render(request, 'about.html', {})
+def help(request):
+    return render(request, 'help.html', {})
 
 def login_user(request):
     if request.method == "POST":
@@ -257,9 +255,6 @@ def search(request):
     if query:
         results = Product.objects.filter(name__icontains=query)
 
-        # Redirect directly to the product page if there's a single result
-        if results.count() == 1:
-            return redirect('product', pk=results.first().pk)
     else:
         results = None
 

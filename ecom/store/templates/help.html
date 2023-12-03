@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% block content %}
+<style>
+    .fa {
+        padding: 20px;
+        font-size: 30px;
+        width: 65px;
+        text-align: center;
+        text-decoration: none;
+        margin: 5px 2px;
+        border-radius: 20%;
+      }
+    
+    .fa:hover {
+        opacity: 0.7;
+    }
+    
+    .fa-facebook {
+      background: #3B5998;
+      color: white;
+    }
+    
+    .fa-twitter {
+      background: #55ACEE;
+      color: white;
+    }
+
+    .fa-instagram {
+      background: #125688;
+      color: white;
+    }
+</style>
+<!-- Header-->
+<header class="bg-secondary py-5">
+    <div class="container px-4 px-lg-5 my-5">
+        <div class="text-center text-white">
+            <h1 class="display-4 fw-bolder">Help</h1>
+            <p class="lead fw-normal text-white-50 mb-0">Ask Us a Question</p>
+        </div>
+    </div>
+</header>
+
+<div class="container">
+    <div class="row">
+        <center>
+            <div class="col-8">
+                <br/><br/>
+                <form method="POST" action="{% url 'login' %}">
+                    {% csrf_token %}
+                    <h1 align="left">Ask a Question</h1>
+                    <div class="mb-3">
+                    <input type="text" class="form-control" name="Ask a Question">
+                    <div>
+                    <br>
+                    <button type="submit" class="btn btn-secondary" >Submit</button>
+                    </div>
+                </form>
+                <br/><br/><br/><br/>
+            </div>
+        </center>
+    </div>
+    <div class="row">
+        <center>
+        <h1>Contact Info</h1>
+        <h3>Email</h3>
+        <h5><a href=mailto:DaShirts@sample.com>DaShirts@sample.com</a></h5>
+        <h3>Social Links</h3>
+        <a href="#" class="fa fa-facebook"></a>
+        <a href="#" class="fa fa-twitter"></a>
+        <a href="#" class="fa fa-instagram"></a>
+        </center>
+    </div>
+    <br/><br/>
+</div>
+
+{% endblock %}
