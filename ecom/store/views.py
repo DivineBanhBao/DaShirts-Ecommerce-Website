@@ -7,6 +7,7 @@ from django.http import JsonResponse
 from django.contrib.auth.models import User
 from django.db import transaction
 from django.utils import timezone
+from decimal import Decimal, ROUND_HALF_UP
 
 def category(request,cate):
     #Grab category from url
@@ -142,7 +143,10 @@ def view_cart(request):
         product = get_object_or_404(Product, id=product_id)
         subtotal = product.price * quantity
         total_price += subtotal
-
+        tax = (total_price * Decimal(str(0.0625)))
+        tax =  tax.quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
+        total_price = tax + total_price
+        total_price = total_price.quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
         cart_items.append({
             'product': product,
             'quantity': quantity,
@@ -153,9 +157,10 @@ def view_cart(request):
         return JsonResponse({
             'cart_items': cart_items,
             'total_price': total_price,
+            'tax': tax,
         })
 
-    return render(request, 'cart.html', {'cart_items': cart_items, 'total_price': total_price})
+    return render(request, 'cart.html', {'cart_items': cart_items, 'total_price': total_price, 'tax': tax})
 
 def checkout(request):
     # Retrieve cart information from the session

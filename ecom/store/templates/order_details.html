@@ -5,44 +5,41 @@
 <header class="bg-secondary py-5">
     <div class="container px-4 px-lg-5 my-5">
         <div class="text-center text-white">
-            <h1 class="display-4 fw-bolder">Orders</h1>
-            <p class="lead fw-normal text-white-50 mb-0">view orders</p>
+            <h1 class="display-4 fw-bolder">Order Details</h1>
         </div>
     </div>
 </header>
-
-<div class="container">
-    <div class="row">
-        <h2>Order Details</h2>
-
-        {% if order %}
-          <p>Order ID: {{ order.id }}</p>
-          <p>Customer: {{ order.customer.user.username }}</p>
-          <p>Total Amount: ${{ order.total_amount }}</p>
-          <p>Order Date: {{ order.order_date }}</p>
-          <p>Full Name: {{ order.full_name }}</p>
-          <p>Address Line 1: {{ order.address_line1 }}</p>
-          <p>Address Line 2: {{ order.address_line2 }}</p>
-          <p>City: {{ order.city }}</p>
-          <p>State: {{ order.state }}</p>
-          <p>Postal Code: {{ order.postal_code }}</p>
-          <p>Country: {{ order.country }}</p>
-        
-          <h3>Ordered Products:</h3>
-          <ul>
-            {% for order_item in order.orderitem_set.all %}
-              <li>
-                {{ order_item.product.name }} -
-                Quantity: {{ order_item.quantity }} -
-                Item Price: ${{ order_item.item_price }}
-              </li>
-            {% endfor %}
-          </ul>
-        
-          <!-- Add other order details as needed -->
-        {% else %}
-          <p>No order details available.</p>
-        {% endif %}
-    </div>
+<br><br>
+<div style="padding-left:400px">
+  <a href="{% url 'view_orders' %}" class="btn btn-secondary">Back to Orders</a>
 </div>
+<div class="container" style="padding-left:250px; font-size: 20px;">
+  <div class="row">
+      <h2>Order Details</h2>
+      {% if order %}
+        Order ID: {{ order.id }}
+        Customer: {{ order.customer.user.username }}<br>
+        Total Amount: ${{ order.total_amount }}<br>
+        Order Date: {{ order.order_date }}<br>
+        Full Name: {{ order.full_name }}<br>
+        Address Line 1: {{ order.address_line1 }}<br>
+        Address Line 2: {{ order.address_line2 }}<br>
+        City: {{ order.city }}<br>
+        State: {{ order.state }}<br>
+        Postal Code: {{ order.postal_code }}<br>
+        Country: {{ order.country }}<br>
+        <br>
+        <h2>Ordered Products:</h2>
+          {% for order_item in order.orderitem_set.all %}
+              {{ order_item.product.name }} -
+              Quantity: {{ order_item.quantity }} -
+              Item Price: ${{ order_item.item_price }}
+              <br>
+          {% endfor %}
+      {% else %}
+        <p>No order details available.</p>
+      {% endif %}
+  </div>
+</div>
+<br><br><br><br><br><br><br><br>
 {% endblock %}
