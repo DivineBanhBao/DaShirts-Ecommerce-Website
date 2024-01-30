@@ -1,4 +1,4 @@
-# CS4393-Group-13-Ecom-Website-
+# DaShirts-Ecommerce-Website
 
 Prerequisite
   Python 3.11.6:
